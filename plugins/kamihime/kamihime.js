@@ -1,6 +1,6 @@
 exports.commands = [
-    "gemquest",
-    "gemquestoff"
+  "gemquest",
+  "gemquestoff"
 ]
 
 //var AuthDetails = require("../../auth.json");
@@ -29,33 +29,35 @@ const schedule = require('node-schedule');
 const embed = require('embed-creator');
 
 const state = {
-    gemquest: {
-        active: false,
-        jobs: []
-    }
+  gemquest: {
+    active: false,
+    jobs: [],
+    mention: '@servantsofalyssa(gemu)'
+  }
 }
 
 const createScheduledJob = function(dayOfWeek, minute, hour, job) {
-    state.gemquest.jobs.push(schedule.scheduleJob('0 ' + minute + ' ' + hour + ' * * ' + dayOfWeek, job));
+  state.gemquest.jobs.push(schedule.scheduleJob('0 ' + minute + ' ' + hour + ' * * ' + dayOfWeek, job));
 }
 
 const clearAllScheduledJobs = function() {
-    if (state.gemquest.jobs.length) {
-        for (let i = 0; i < state.gemquest.jobs.length; i++) {
-            state.gemquest.jobs[i].cancel();
-        }
-        state.gemquest.jobs = [];
+  if (state.gemquest.jobs.length) {
+    for (let i = 0; i < state.gemquest.jobs.length; i++) {
+      state.gemquest.jobs[i].cancel();
     }
+    state.gemquest.jobs = [];
+  }
 }
 
 const gemQuestMessage = function(msg) {
-    return function (scheduledTime) {
-        console.log('Gem Quest began at ', scheduledTime);
-        msg.channel.send('@servants of alyssa (gemu) : Gem quest has begun! It will be active for the next 30 minutes.');
-    };
+  return function (scheduledTime) {
+    console.log('Gem Quest began at ', scheduledTime);
+    msg.channel.send(state.gemquest.mention + ' : Gem quest has begun! It will be active for the next 30 minutes.');
+  };
 }
 
-/*
+/**
+  Currently assumes EST (UTC-5) timezone
 *    *    *    *    *    *
 ┬    ┬    ┬    ┬    ┬    ┬
 │    │    │    │    │    │
@@ -89,66 +91,66 @@ const gemQuestMessage = function(msg) {
   0  0  1 * * 0
   0 30 15 * * 0
   0  0 22 * * 0
-*/
+  **/
 const createGemquestJobs = function(msg) {
-    const jobFunction = gemQuestMessage(msg);
+  const jobFunction = gemQuestMessage(msg);
 
-    createScheduledJob(1, 0, 2, jobFunction);
-    createScheduledJob(1, 0, 15, jobFunction);
-    createScheduledJob(1, 0, 22, jobFunction);
+  createScheduledJob(1, 0, 2, jobFunction);
+  createScheduledJob(1, 0, 15, jobFunction);
+  createScheduledJob(1, 0, 22, jobFunction);
 
-    createScheduledJob(2, 30, 15, jobFunction);
-    createScheduledJob(2, 30, 22, jobFunction);
+  createScheduledJob(2, 30, 15, jobFunction);
+  createScheduledJob(2, 30, 22, jobFunction);
 
-    createScheduledJob(3, 0, 21, jobFunction);
+  createScheduledJob(3, 0, 21, jobFunction);
 
-    createScheduledJob(4, 30, 1, jobFunction);
-    createScheduledJob(4, 0, 22, jobFunction);
+  createScheduledJob(4, 30, 1, jobFunction);
+  createScheduledJob(4, 0, 22, jobFunction);
 
-    createScheduledJob(5, 0, 2, jobFunction);
-    createScheduledJob(5, 30, 22, jobFunction);
+  createScheduledJob(5, 0, 2, jobFunction);
+  createScheduledJob(5, 30, 22, jobFunction);
 
-    createScheduledJob(6, 30, 2, jobFunction);
-    createScheduledJob(6, 0, 15, jobFunction);
-    createScheduledJob(6, 0, 21, jobFunction);
+  createScheduledJob(6, 30, 2, jobFunction);
+  createScheduledJob(6, 0, 15, jobFunction);
+  createScheduledJob(6, 0, 21, jobFunction);
 
-    createScheduledJob(0, 0, 1, jobFunction);
-    createScheduledJob(0, 30, 15, jobFunction);
-    createScheduledJob(0, 0, 22, jobFunction);
+  createScheduledJob(0, 0, 1, jobFunction);
+  createScheduledJob(0, 30, 15, jobFunction);
+  createScheduledJob(0, 0, 22, jobFunction);
 }
 
 
 exports.gemquest = {
-    usage: 'gemquest', //TODO timezone support ?
-    description: function() {
-        var str = "Kamihime Gemquest Notifier Activation";
-        return str;
-    },
-    process: function(bot,msg,suffix) {
-        if (state.gemquest.active) {
-            msg.channel.send("Kamihime Gemquest Notifier is already running.");
-        } else {
-            msg.channel.send("Activating Kamihime Gemquest Notifier");
-            state.gemquest.active = true;
+  usage: 'gemquest',
+  description: function() {
+    var str = "Kamihime Gemquest Notifier Activation";
+    return str;
+  },
+  process: function(bot,msg,suffix) {
+    if (state.gemquest.active) {
+      msg.channel.send("Kamihime Gemquest Notifier is already running.");
+    } else {
+      msg.channel.send("Activating Kamihime Gemquest Notifier");
+      state.gemquest.active = true;
 
-            createGemquestJobs(msg);
-        }
+      createGemquestJobs(msg);
     }
+  }
 }
 
 exports.gemquestoff = {
-    usage: 'gemquestoff',
-    description: function() {
-        var str = "Kamihime Gemquest Notifier Deactivation"
-        return str;
-    },
-    process: function(bot,msg,suffix) {
-        if (state.gemquest.active) {
-            msg.channel.send("Deactivating Kamihime Gemquest Notifier");
-            state.gemquest.active = false;
-            clearAllScheduledJobs();
-        } else {
-            msg.channel.send("Kamihime Gemquest Notifier is not currently running.");
-        }
+  usage: 'gemquestoff',
+  description: function() {
+    var str = "Kamihime Gemquest Notifier Deactivation"
+    return str;
+  },
+  process: function(bot,msg,suffix) {
+    if (state.gemquest.active) {
+      msg.channel.send("Deactivating Kamihime Gemquest Notifier");
+      state.gemquest.active = false;
+      clearAllScheduledJobs();
+    } else {
+      msg.channel.send("Kamihime Gemquest Notifier is not currently running.");
     }
+  }
 }
