@@ -1,6 +1,7 @@
 exports.commands = [
   "gemquest",
-  "gemquestoff"
+  "gemquestoff",
+  "gemdebug"
 ]
 
 //var AuthDetails = require("../../auth.json");
@@ -32,7 +33,8 @@ const state = {
   gemquest: {
     active: false,
     jobs: [],
-    mention: '@servantsofalyssa(gemu)'
+    mention: 'servants of alyssa (gemu)',
+    mention_id: '457438306179874820'
   }
 }
 
@@ -52,7 +54,7 @@ const clearAllScheduledJobs = function() {
 const gemQuestMessage = function(msg) {
   return function (scheduledTime) {
     console.log('Gem Quest began at ', scheduledTime);
-    msg.channel.send(state.gemquest.mention + ' : Gem quest has begun! It will be active for the next 30 minutes.');
+    msg.channel.send('<@&' + state.gemquest.mention_id + '> : Gem quest has begun! It will be active for the next 30 minutes.');
   };
 }
 
@@ -119,6 +121,17 @@ const createGemquestJobs = function(msg) {
   createScheduledJob(0, 0, 22, jobFunction);
 }
 
+exports.gemdebug = {
+  usage: 'gemdebug',
+  description: function() {
+    var str = "Kamihime Gemquest Debug, developer only";
+    return str;
+  },
+  process: function(bot,msg,suffix) {
+    var gemuRole = msg.guild.roles.find('name', state.gemquest.mention);
+    console.log(gemuRole);
+  }
+}
 
 exports.gemquest = {
   usage: 'gemquest',
