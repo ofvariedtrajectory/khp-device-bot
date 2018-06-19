@@ -193,8 +193,8 @@ exports.attack = {
     const elementAtkUpTotalEidoPercent = elementAtkUpMainEidoPercent + elementAtkUpSupportEidoPercent;
 
     const damage =  displayAtk 
-                      * (1 + (assaultAtkPercent / 100.0) + charAtkUpTotalEidoPercent / 100.0)
-                      * (weaknessCorrection + elementAtkUpTotalEidoPercent)
+                      * (1 + (assaultAtkPercent / 100.0) + (charAtkUpTotalEidoPercent / 100.0))
+                      * (weaknessCorrection + (elementAtkUpTotalEidoPercent / 100))
                     ;
 
     console.log(damage);
