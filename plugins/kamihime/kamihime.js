@@ -1,5 +1,5 @@
 exports.commands = [
-  "gemquest",
+  "attack",
   "gemquestoff",
   "gemdebug"
 ]
@@ -121,17 +121,88 @@ const createGemquestJobs = function(msg) {
   createScheduledJob(0, 0, 22, jobFunction);
 }
 
-exports.gemdebug = {
-  usage: 'gemdebug',
+// https://stackoverflow.com/questions/10834796/validate-that-a-string-is-a-positive-integer
+const isValidInteger = function(input) {
+  const n = Math.floor(Number(input));
+  return n !== Infinity && String(n) === input && n >= 0;
+}
+
+exports.attack = {
+  usage: 'attack <displayAtk> <assaultAtk%> <charMainEido%> <charSupportEido%> <eleMainEido%> <eleSupportEido%>',
   description: function() {
-    var str = "Kamihime Gemquest Debug, developer only";
+    const str = "Kamihime Attack Calculator";
     return str;
   },
   process: function(bot,msg,suffix) {
-    var gemuRole = msg.guild.roles.find('name', state.gemquest.mention);
-    console.log(gemuRole);
+// formula Damage = 
+// 　Display Attack Power 
+// 　　× (1 + Assault bonus + Character ATK UP Summon effect + Attack UP buffs + Assist bonus) 
+// 　　× (Weakness correction(0.75/1/1.45[+ 0.03, if L/D]) + Element ATK UP Summon/Hero Weapon + Element ATK UP buffs) 
+// 　　× (1 + *Other buffs) (e.g. Berserk, Stun punisher, etc.)
+// 　　÷ {Enemy Defense × (1 - Defense DWN debuffs)}
+
+    const args = (suffix || '').split(' ');
+
+    console.log(args.length, args);
+
+    if (args.length !== 6) {
+      msg.channel.send('Correct usage: ' + this.usage);
+      return;
+    }
+
+
+    let displayAtk;
+    let assaultAtkPercent;
+    let charAtkUpMainEidoPercent;
+    let charAtkUpSupportEidoPercent;
+    let elementAtkUpMainEidoPercent;
+    let elementAtkUpSupportEidoPercent;
+    try {
+      if (isValidInteger(args[0])) {
+        displayAtk = Number(args[0]);
+      }
+      if (isValidInteger(args[1])) {
+        assaultAtkPercent = Number(args[1]);
+      }
+      if (isValidInteger(args[2])) {
+        charAtkUpMainEidoPercent = Number(args[2]);
+      }
+      if (isValidInteger(args[3])) {
+        charAtkUpSupportEidoPercent = Number(args[3]);
+      }
+      if (isValidInteger(args[4])) {
+        elementAtkUpMainEidoPercent = Number(args[4]);
+      }
+      if (isValidInteger(args[5])) {
+        elementAtkUpSupportEidoPercent = Number(args[5]);
+      }
+    } catch (e) {
+      console.log(e);
+      msg.channel.send("error: ", e);
+    }
+
+    // const displayAtk = 47137;
+    // const assaultAtkPercent = 123;
+    // const charAtkUpMainEidoPercent = 0;
+    // const charAtkUpSupportEidoPercent = 0;
+    const charAtkUpTotalEidoPercent = charAtkUpMainEidoPercent + charAtkUpSupportEidoPercent;
+    const weaknessCorrection = 1;
+
+    // const elementAtkUpMainEidoPercent = 105;
+    // const elementAtkUpSupportEidoPercent = 100;
+    const elementAtkUpTotalEidoPercent = elementAtkUpMainEidoPercent + elementAtkUpSupportEidoPercent;
+
+    const damage =  displayAtk 
+                      * (1 + (assaultAtkPercent / 100.0) + charAtkUpTotalEidoPercent / 100.0)
+                      * (weaknessCorrection + elementAtkUpTotalEidoPercent)
+                    ;
+
+    console.log(damage);
+    console.log(suffix);
+    msg.channel.send("damage:" + damage);
   }
 }
+
 
 exports.gemquest = {
   usage: 'gemquest',
