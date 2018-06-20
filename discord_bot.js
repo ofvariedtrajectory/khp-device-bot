@@ -423,6 +423,9 @@ bot.on("presence", function(user,status,gameId) {
 	}catch(e){}
 });
 
+exports.getBot = function() {
+	return bot;
+}
 
 exports.addCommand = function(commandName, commandObject){
     try {
