@@ -1,21 +1,24 @@
 const schedule = require('node-schedule');
 
+
 const internals = {};
 
+const config = require('../../discord_bot').getConfig();
+
+// Default state. Override mention_id in config.json
 const state = {
   gemquest: {
     active: false,
     jobs: [],
-    mention: 'servants of alyssa (gemu)',
-    mention_id: '457438306179874820'
+    mention_id: config.gemquest_mention_id || '457438306179874820' // 'servants of alyssa (gemu)'
   }
 }
 
-exports.activateGemquest = internals.activateGemquest = function(channel) {
+exports.activateGemquest = internals.activateGemquest = function(channel, silent) {
   if (state.gemquest.active) {
     channel.send("Kamihime Gemquest Notifier is already running.");
   } else {
-    channel.send("Activating Kamihime Gemquest Notifier");
+    !silent && channel.send("Activating Kamihime Gemquest Notifier");
     state.gemquest.active = true;
 
     internals.createGemquestJobs(channel);

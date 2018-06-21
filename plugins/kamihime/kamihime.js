@@ -37,7 +37,7 @@ const initialize = function() {
   const gemquestChannel = bot.channels.find('name', 'gemquest');
   if (gemquestChannel) {
     console.log('initializing gemquest');
-    gemquestService.activateGemquest(gemquestChannel);
+    gemquestService.activateGemquest(gemquestChannel, true);
   }
   //console.log(bot.channels.find('name', 'gemquest'));
 }
@@ -85,7 +85,6 @@ exports.attack = {
       channel.send('Correct usage: ' + this.usage);
       return;
     }
-
 
     let displayAtk;
     let assaultAtkPercent;
@@ -135,7 +134,7 @@ exports.attack = {
 
     console.log(damage);
     console.log(suffix);
-    channel.send("damage:" + damage);
+    channel.send("damage: " + Math.round(damage));
   }
 }
 
