@@ -1,8 +1,9 @@
 exports.commands = [
-  "attack",
-  "gemquest",
-  "gemquestoff",
-  "devdebug"
+  'attack',
+  'gemquest',
+  'gemquestoff',
+  'devdebug',
+  'gemu'
 ]
 
 //var AuthDetails = require("../../auth.json");
@@ -48,7 +49,7 @@ initialize();
 exports.devdebug = {
   usage: 'devdebug',
   description: function() {
-    return "Kamihime Developer Debug";
+    return 'Kamihime Developer Debug';
   },
   process: function(bot,msg,suffix) {
     const channel = msg.channel;
@@ -66,7 +67,7 @@ const isValidInteger = function(input) {
 exports.attack = {
   usage: 'attack <displayAtk> <assaultAtk%> <charMainEido%> <charSupportEido%> <eleMainEido%> <eleSupportEido%>',
   description: function() {
-    return "Kamihime Attack Calculator";
+    return 'Kamihime Attack Calculator';
   },
   process: function(bot,msg,suffix) {
     const channel = msg.channel;
@@ -113,7 +114,7 @@ exports.attack = {
       }
     } catch (e) {
       console.log(e);
-      channel.send("error: ", e);
+      channel.send('error: ', e);
     }
 
     // const displayAtk = 47137;
@@ -134,14 +135,14 @@ exports.attack = {
 
     console.log(damage);
     console.log(suffix);
-    channel.send("damage: " + Math.round(damage));
+    channel.send('damage: ' + Math.round(damage));
   }
 }
 
 exports.gemquest = {
   usage: 'gemquest',
   description: function() {
-    return "Kamihime Gemquest Notifier Activation";
+    return 'Kamihime Gemquest Notifier Activation';
   },
   process: function(bot,msg,suffix) {
     gemquestService.activateGemquest(msg.channel);
@@ -151,9 +152,19 @@ exports.gemquest = {
 exports.gemquestoff = {
   usage: 'gemquestoff',
   description: function() {
-    return "Kamihime Gemquest Notifier Deactivation";
+    return 'Kamihime Gemquest Notifier Deactivation';
   },
   process: function(bot,msg,suffix) {
     gemquestService.deactivateGemquest(msg.channel);
+  }
+}
+
+exports.gemu = {
+  usage: 'gemu',
+  description: function() {
+    return 'Toggle gemu role for gemquest notifications';
+  },
+  process: function(bot,msg,suffix) {
+    gemquestService.gemuRoleToggle(msg);
   }
 }

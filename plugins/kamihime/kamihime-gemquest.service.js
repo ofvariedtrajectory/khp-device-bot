@@ -14,9 +14,23 @@ const state = {
   }
 }
 
+exports.gemuRoleToggle = function(msg) {
+  const channel = msg.channel;
+  const rolecheck = msg.member.roles.has(state.gemquest.mention_id);
+  const gemuRole = msg.guild.roles.find('id', state.gemquest.mention_id);
+
+  if (rolecheck) {
+    msg.member.removeRole(gemuRole).catch(console.error);
+    channel.send('Removed gemu role from ' + msg.member);
+  } else {
+    msg.member.addRole(gemuRole).catch(console.error);
+    channel.send('Applied gemu role to ' + msg.member);
+  }
+}
+
 exports.activateGemquest = internals.activateGemquest = function(channel, silent) {
   if (state.gemquest.active) {
-    channel.send("Kamihime Gemquest Notifier is already running.");
+    channel.send('Kamihime Gemquest Notifier is already running.');
   } else {
     !silent && channel.send("Activating Kamihime Gemquest Notifier");
     state.gemquest.active = true;
@@ -27,11 +41,11 @@ exports.activateGemquest = internals.activateGemquest = function(channel, silent
 
 exports.deactivateGemquest = internals.deactivateGemquest = function(channel) {
   if (state.gemquest.active) {
-    channel.send("Deactivating Kamihime Gemquest Notifier");
+    channel.send('Deactivating Kamihime Gemquest Notifier');
     state.gemquest.active = false;
     internals.clearAllScheduledJobs();
   } else {
-    channel.send("Kamihime Gemquest Notifier is not currently running.");
+    channel.send('Kamihime Gemquest Notifier is not currently running.');
   }
 }
 
