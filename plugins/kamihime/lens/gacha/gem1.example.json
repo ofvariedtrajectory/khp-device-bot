@@ -1,0 +1,22 @@
+{
+    "gacha_id":8,
+    "kh_name": "taconame",
+    "animation_data":{
+        "gacha_category_id":3,
+        "direction_type":"rare",
+        "one_by_one":false
+    },
+    "obtained_info":[
+        {
+            "summon_info":{
+                "id":107,
+                "name":"Wood Nymph",
+                "rare":"N",
+                "element_type":2,
+                "is_new":false,
+                "bonus":0,
+                "is_episode_release":false
+            }
+        }
+    ]
+}

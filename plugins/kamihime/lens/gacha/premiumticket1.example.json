@@ -1,0 +1,8 @@
+{
+    "gacha_id":11,
+    "kh_name": "taconame",
+    "animation_data":{
+        "gacha_category_id":4,"direction_type":"rare","one_by_one":true
+    },
+    "obtained_info":[{"weapon_info":{"id":5022,"name":"Fishing Bow","rare":"R","element_type":0,"is_new":true,"bonus":0,"character_joined_info":{"character_id":7022,"a_character_id":20052508,"rare":"R","element_type":0,"character_name":"Taikoubou","is_episode_release":true}}}]
+}

@@ -28,19 +28,38 @@ exports.commands = [
 //   }, 
 //   false
 // ));
+const lens = require('./lens');
 const gemquestService = require('./kamihime-gemquest.service');
+const profileService = lens.profile;
+let mongodb;
 
 
 
 const initialize = function() {
-  const bot = require('../../discord_bot').getBot();
+  const discordBot = require('../../discord_bot');
+  const bot = discordBot.getBot();
+  const mongodbClient = require('../../lib/mongo');
 
   const gemquestChannel = bot.channels.find('name', 'gemquest');
   if (gemquestChannel) {
     console.log('initializing gemquest');
     gemquestService.activateGemquest(gemquestChannel, true);
   }
-  //console.log(bot.channels.find('name', 'gemquest'));
+
+  const config = discordBot.getConfig();
+
+  mongodbClient.connect({
+    user: config.mongoUser,
+    pass: config.mongoPass,
+    db: config.mongoDb
+  }).then(function(db) {
+    mongodb = db.db('device');
+
+    lens.init(config, mongodb);
+  }).catch(function(e) {
+    console.log(e);
+  });
+
 }
 initialize();
 
@@ -53,8 +72,15 @@ exports.devdebug = {
   },
   process: function(bot,msg,suffix) {
     const channel = msg.channel;
-    console.log(msg.author.id);
-    channel.send(msg.author.id);
+    console.log(msg.author.username);
+
+    profileService.getProfileOrCreate(msg.author.id , msg.author.username, mongodb).then(function(profile) {
+      console.log(profile);
+      channel.send(msg.author.id);
+    }).catch(function(e) {
+      console.log(e);
+    });
+
   }
 }
 
@@ -77,6 +103,14 @@ exports.attack = {
 // 　　× (Weakness correction(0.75/1/1.45[+ 0.03, if L/D]) + Element ATK UP Summon/Hero Weapon + Element ATK UP buffs) 
 // 　　× (1 + *Other buffs) (e.g. Berserk, Stun punisher, etc.)
 // 　　÷ {Enemy Defense × (1 - Defense DWN debuffs)}
+
+// = display ATK
+// × (1 + Weapon assault + Eido chrUP + ATK buff + assist)
+// × (1 + elemAdv + Eido ElemUP + ElemUP buff) 
+// × (1 + Guardian Effect)
+// × (1 + Other ability Effect)
+// × (1 - Allies ATK down debuff)
+// ÷ {enemy DEF × (1 - DEF debuff)}
 
     const args = (suffix || '').split(' ');
 

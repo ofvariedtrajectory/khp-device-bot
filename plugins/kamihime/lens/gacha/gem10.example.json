@@ -1,0 +1,24 @@
+{
+    "gacha_id":9,
+    "kh_name": "taconame",
+    "animation_data":{
+        "gacha_category_id":3,
+        "direction_type":"s_rare",
+        "one_by_one":false
+    },
+    "obtained_info":[
+        {
+            "item_info":{
+                "id":52,"name":"Prison of Ice, Idea Core"
+            }
+        },
+        {
+            "weapon_info":{
+                "id":133,
+                "name":"Flame Hammer",
+                "rare":"N",
+                "element_type":0,
+                "is_new":false,
+                "bonus":0}},{"weapon_info":{"id":146,"name":"Crystal Ball","rare":"N","element_type":1,"is_new":false,"bonus":0}},{"item_info":{"id":45,"name":"Dragon Bone of Water"}},{"weapon_info":{"id":233,"name":"Seraph Ballista","rare":"SR","element_type":5,"is_new":false,"bonus":0}},{"summon_info":{"id":103,"name":"Orc","rare":"N","element_type":0,"is_new":false,"bonus":0,"is_episode_release":false}},{"item_info":{"id":60,"name":"Blazing Idea Core"}},{"weapon_info":{"id":85,"name":"Water Cutter","rare":"R","element_type":1,"is_new":false,"bonus":0}},{"summon_info":{"id":207,"name":"Minotaur","rare":"N","element_type":0,"is_new":false,"bonus":0,"is_episode_release":false}},{"summon_info":{"id":107,"name":"Wood Nymph","rare":"N","element_type":2,"is_new":false,"bonus":0,"is_episode_release":false}}
+    ]
+}

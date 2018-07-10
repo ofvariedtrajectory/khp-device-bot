@@ -19,12 +19,16 @@ exports.gemuRoleToggle = function(msg) {
   const rolecheck = msg.member.roles.has(state.gemquest.mention_id);
   const gemuRole = msg.guild.roles.find('id', state.gemquest.mention_id);
 
-  if (rolecheck) {
-    msg.member.removeRole(gemuRole).catch(console.error);
-    channel.send('Removed gemu role from ' + msg.member);
-  } else {
-    msg.member.addRole(gemuRole).catch(console.error);
-    channel.send('Applied gemu role to ' + msg.member);
+  try {
+    if (rolecheck) {
+      msg.member.removeRole(gemuRole).catch(console.error);
+      channel.send('Removed gemu role from ' + msg.member);
+    } else {
+      msg.member.addRole(gemuRole).catch(console.error);
+      channel.send('Applied gemu role to ' + msg.member);
+    }
+  } catch (e) {
+    console.log('error during gemuRoleToggle', e)
   }
 }
 
@@ -32,7 +36,7 @@ exports.activateGemquest = internals.activateGemquest = function(channel, silent
   if (state.gemquest.active) {
     channel.send('Kamihime Gemquest Notifier is already running.');
   } else {
-    !silent && channel.send("Activating Kamihime Gemquest Notifier");
+    !silent && channel.send('Activating Kamihime Gemquest Notifier');
     state.gemquest.active = true;
 
     internals.createGemquestJobs(channel);
@@ -65,7 +69,11 @@ internals.clearAllScheduledJobs = function() {
 internals.gemQuestMessage = function(channel) {
   return function (scheduledTime) {
     console.log('Gem Quest began at ', scheduledTime);
-    channel.send('<@&' + state.gemquest.mention_id + '> : Gem quest has begun! It will be active for the next 30 minutes.');
+    try {
+      channel.send('<@&' + state.gemquest.mention_id + '> : Gem quest has begun! It will be active for the next 30 minutes.');
+    } catch (e) {
+      console.log('error during gemQuestMessage', e)
+    }
   };
 }
 

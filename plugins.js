@@ -78,7 +78,7 @@ function load_plugins(){
         try {
             plugin = require(plugin_directory + plugin_folders[i])
         } catch (err) {
-           console.log("Improper setup of the '" + plugin_folders[i] +"' plugin. : " + err);
+           console.log("Improper setup of the '" + plugin_folders[i] +"' plugin. : ", err);
         }
         if (plugin){
             if("commands" in plugin){
