@@ -2,7 +2,8 @@ const gachaService = require('./gacha.service');
 
 exports.routes = function(server, mongodb) {
     /**
-    curl -vX POST http://localhost:8000/v1/123456789/gacha/gem1 -d @gem1.example.json --header "Content-Type: application/json"
+    curl -vX POST http://localhost:8888/v1/123456789/gacha/gem1 -d @gem1.example.json --header "Content-Type: application/json"
+    curl -vX POST http://localhost:8888/v1/123456789/gacha/gem1 -d @gem1free.example.json --header "Content-Type: application/json"
     */
     server.route({
         method: 'POST',
@@ -18,7 +19,7 @@ exports.routes = function(server, mongodb) {
     });
 
     /**
-    curl -vX POST http://localhost:8000/v1/123456789/gacha/gem10 -d @gem10.example.json --header "Content-Type: application/json"
+    curl -vX POST http://localhost:8888/v1/123456789/gacha/gem10 -d @gem10.example.json --header "Content-Type: application/json"
     */
     server.route({
         method: 'POST',
@@ -34,7 +35,7 @@ exports.routes = function(server, mongodb) {
     });
 
     /**
-    curl -vX POST http://localhost:8000/v1/123456789/gacha/jewel1 -d @jewel1.example.json --header "Content-Type: application/json"
+    curl -vX POST http://localhost:8888/v1/123456789/gacha/jewel1 -d @jewel1.example.json --header "Content-Type: application/json"
     */
     server.route({
         method: 'POST',
@@ -50,7 +51,7 @@ exports.routes = function(server, mongodb) {
     });
 
     /**
-    curl -vX POST http://localhost:8000/v1/123456789/gacha/jewel10 -d @jewel10.example.json --header "Content-Type: application/json"
+    curl -vX POST http://localhost:8888/v1/123456789/gacha/jewel10 -d @jewel10.example.json --header "Content-Type: application/json"
     */
     server.route({
         method: 'POST',
@@ -66,7 +67,7 @@ exports.routes = function(server, mongodb) {
     });
 
     /**
-    curl -vX POST http://localhost:8000/v1/123456789/gacha/premiumticket1 -d @premiumticket1.example.json --header "Content-Type: application/json"
+    curl -vX POST http://localhost:8888/v1/123456789/gacha/premiumticket1 -d @premiumticket1.example.json --header "Content-Type: application/json"
     */
     server.route({
         method: 'POST',
