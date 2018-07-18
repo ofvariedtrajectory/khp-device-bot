@@ -1,6 +1,5 @@
 {
     "gacha_id":6,
-    "kh_name": "taconame",
     "header_date": "Tue Jul 10 2018 22:46:24 GMT-0400",
     "animation_data":{"gacha_category_id":2,"direction_type":"rare","one_by_one":true},
     "obtained_info":[{"weapon_info":{"id":109,"name":"Staff of Wrath","rare":"R","element_type":3,"is_new":true,"bonus":0}}]}

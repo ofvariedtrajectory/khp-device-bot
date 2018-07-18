@@ -56,10 +56,9 @@ internals.validateGacha = function(khId, data, type) {
   const gachaResultLengthCheck = obtainedInfo 
     && obtainedInfo.length > 0 
     && obtainedInfo.length <= internals.gacha[type].gacha_length;
-  const payloadHasKhName = data.kh_name && data.kh_name.length;
-  const payloadHasHeaderDate = data.header_date
+  const payloadHasHeaderDate = data.header_date;
 
-  return gachaTypeCheck && gachaResultLengthCheck && payloadHasKhName && payloadHasHeaderDate;
+  return gachaTypeCheck && gachaResultLengthCheck && payloadHasHeaderDate;
 }
 
 /**
@@ -85,7 +84,7 @@ internals.wrapGachaPull = async function(khId, data, type, db) {
     const obtainedInfo = data.obtained_info;
     const headerDate = data.header_date;
 
-    const response = await internals.recordGachaPull(khId, data.kh_name, headerDate, obtainedInfo, evaluatedType, db);
+    const response = await internals.recordGachaPull(khId, data.kh_name ? data.kh_name : '$unavailable$', headerDate, obtainedInfo, evaluatedType, db);
     return response;
   } else {
     return {
