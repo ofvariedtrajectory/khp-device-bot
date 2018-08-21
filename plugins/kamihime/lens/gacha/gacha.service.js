@@ -148,3 +148,19 @@ exports.premiumticket1Gacha = async function(khId, data, db) {
   const response = await internals.wrapGachaPull(khId, data, internals.gacha.premiumticket1.name, db);
   return response;
 }
+
+exports.getAllGacha = async function(db) {
+  const collection = internals.getGachaCollection(db);
+  const cursor = await collection.find();
+
+  // Not very memory friendly, but hapi is giving me problems with streams right now
+  const response = [];
+
+  while(await cursor.hasNext()) {
+    const doc = await cursor.next();
+    // process doc here
+    response.push(doc);
+  }
+
+  return response;
+}

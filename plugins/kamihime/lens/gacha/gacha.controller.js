@@ -81,4 +81,13 @@ exports.routes = function(server, mongodb) {
             return response;
         }
     });
+
+    server.route({
+        method: 'GET',
+        path: '/v1/allgacha',
+        handler: async function(request, h) {
+            const response = await gachaService.getAllGacha(mongodb);
+            return response;
+        }
+    });
 }
