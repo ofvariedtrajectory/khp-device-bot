@@ -10,8 +10,139 @@ const state = {
   gemquest: {
     active: false,
     jobs: [],
-    mention_id: config.gemquest_mention_id || '457438306179874820' // 'servants of alyssa (gemu)'
+    mention_id: config.gemquest_mention_id || '457438306179874820', // 'servants of alyssa (gemu)'
+    times: {
+      0: [
+        {
+          hour: 1,
+          minute: 0
+        }, {
+          hour: 15,
+          minute: 30
+        }, {
+          hour: 22,
+          minute: 0
+        },
+      ],
+      1: [
+        {
+          hour: 2,
+          minute: 0
+        }, {
+          hour: 15,
+          minute: 0
+        }, {
+          hour: 22,
+          minute: 0
+        },
+      ],
+      2: [
+        {
+          hour: 15,
+          minute: 30
+        }, {
+          hour: 22,
+          minute: 30
+        },
+      ],
+      3: [
+        {
+          hour: 21,
+          minute: 0
+        },
+      ],
+      4: [
+        {
+          hour: 1,
+          minute: 30
+        }, {
+          hour: 22,
+          minute: 0
+        },
+      ],
+      5: [
+        {
+          hour: 2,
+          minute: 0
+        }, {
+          hour: 22,
+          minute: 30
+        },
+      ],
+      6: [
+        {
+          hour: 2,
+          minute: 30
+        }, {
+          hour: 15,
+          minute: 0
+        }, {
+          hour: 21,
+          minute: 0
+        },
+      ],
+    }
   }
+}
+
+const constructTimeString = function (hr, min) {
+  return hr * 100 + min;
+}
+
+const getRemainingLengthOfDay = function (hr, min) {
+  const remainingLength = {};
+  if (min === 0) {
+    remainingLength.hour = 24 - hr;
+    remainingLength.minute = 0;
+  } else {
+    remainingLength.hour = 23 - hr;
+    remainingLength.minute = 60 - min;
+  }
+  return remainingLength;
+}
+
+exports.nextGem = function(channel) {
+  const now = new Date();
+  let dayOfWeek = now.getDay();
+  const hour = now.getHours();
+  const minute = now.getMinutes();
+  const times = state.gemquest.times[dayOfWeek];
+  const nowTimeString = constructTimeString(hour, minute);
+
+  let msg = null;
+  for (let i = 0; i < times.length; i++) {
+    const time = times[i];
+    const timeTimeString = constructTimeString(time.hour, time.minute);
+    if (timeTimeString >= nowTimeString) {
+      let hrCalc = time.hour - now.getHours();
+      let minCalc = time.minute - now.getMinutes();
+      if (minCalc < 0) {
+        hrCalc--;
+        minCalc += 60;
+      }
+      
+      msg = 'The next gemquest is in ' + hrCalc + ' hours and ' + minCalc + ' minutes.';
+    }
+  }
+
+  if (msg == null) {
+    let nextDay = dayOfWeek + 1;
+    if (nextDay == 7) {
+      nextDay = 0;
+    }
+    const timeToUse = state.gemquest.times[nextDay][0];
+    const remainingLengthTilGem = getRemainingLengthOfDay(hour, minute);
+    remainingLengthTilGem.hour += timeToUse.hour;
+    remainingLengthTilGem.minute += timeToUse.minute;
+    if (remainingLengthTilGem.minute >= 60) {
+      remainingLengthTilGem.hour++;
+      remainingLengthTilGem.minute -= 60;
+    }
+    
+    msg = 'The next gemquest is in ' + remainingLengthTilGem.hour + ' hours and ' + remainingLengthTilGem.minute + ' minutes.';
+  }
+
+  channel.send(msg);
 }
 
 exports.gemuRoleToggle = function(msg) {

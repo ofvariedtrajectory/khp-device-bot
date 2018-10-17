@@ -1,9 +1,10 @@
 exports.commands = [
   'attack',
+  'nextgem',
   'gemquest',
   'gemquestoff',
   'devdebug',
-  'gemu'
+  'gemu',
 ]
 
 //var AuthDetails = require("../../auth.json");
@@ -170,6 +171,16 @@ exports.attack = {
     console.log(damage);
     console.log(suffix);
     channel.send('damage: ' + Math.round(damage));
+  }
+}
+
+exports.nextgem = {
+  usage: 'nextgem',
+  description: function() {
+    return 'Tells how long until next Kamihime Gemquest';
+  },
+  process: function(bot,msg,suffix) {
+    gemquestService.nextGem(msg.channel);
   }
 }
 
