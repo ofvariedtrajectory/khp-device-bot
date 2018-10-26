@@ -122,6 +122,7 @@ exports.nextGem = function(channel) {
       }
       
       msg = 'The next gemquest is in ' + hrCalc + ' hours and ' + minCalc + ' minutes.';
+      break;
     }
   }
 
