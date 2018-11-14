@@ -148,13 +148,15 @@ exports.nextGem = function(channel) {
 exports.gemuRoleToggle = function(msg) {
   const channel = msg.channel;
   const gemuRole = msg.member.roles.find('name', state.gemquest.mention_name);
+  console.log('gemuRole', state.gemquest.mention_name, gemuRole);
 
   try {
     if (gemuRole) {
       msg.member.removeRole(gemuRole.id).catch(console.error);
       channel.send('Removed gemu role from ' + msg.member);
     } else {
-      msg.member.addRole(gemuRole.id).catch(console.error);
+      const gemquestRole = channel.guild.roles.find('name', state.gemquest.mention_name);
+      msg.member.addRole(gemquestRole.id).catch(console.error);
       channel.send('Applied gemu role to ' + msg.member);
     }
   } catch (e) {
