@@ -12,7 +12,7 @@
   "license": "GPL-2.0",
   "dependencies": {
     "discord.js": "11.3.x",
-    "embed-creator": "^1.2.3",
+    "embed-creator": "^1.2.4",
     "hapi": "^17.5.2",
     "inert": "^5.1.0",
     "mongodb": "^3.0.11",

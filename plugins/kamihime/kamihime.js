@@ -41,12 +41,8 @@ const initialize = function() {
   const bot = discordBot.getBot();
   const mongodbClient = require('../../lib/mongo');
 
-  const gemquestChannel = bot.channels.find('name', 'gemquest');
-  if (gemquestChannel) {
-    console.log('initializing gemquest');
-    gemquestService.activateGemquest(gemquestChannel, true);
-  }
-
+  gemquestService.initializeGemquest(bot);
+  
   const config = discordBot.getConfig();
 
   mongodbClient.connect({

@@ -1,16 +1,15 @@
 const schedule = require('node-schedule');
 
-
 const internals = {};
-
 const config = require('../../discord_bot').getConfig();
 
-// Default state. Override mention_id in config.json
+// Default state. Override mention_name, init_channel_name in config.json
 const state = {
   gemquest: {
     active: false,
     jobs: [],
-    mention_id: config.gemquest_mention_id || '457438306179874820', // 'servants of alyssa (gemu)'
+    mention_name: config.gemquest_mention_name || 'servants of alyssa (gemu)',
+    init_channel_name: config.gemquest_channel_name || 'gemquest',
     times: {
       0: [
         {
@@ -148,19 +147,36 @@ exports.nextGem = function(channel) {
 
 exports.gemuRoleToggle = function(msg) {
   const channel = msg.channel;
-  const rolecheck = msg.member.roles.has(state.gemquest.mention_id);
-  const gemuRole = msg.guild.roles.find('id', state.gemquest.mention_id);
+  const gemuRole = msg.member.roles.find('name', state.gemquest.mention_name);
 
   try {
-    if (rolecheck) {
-      msg.member.removeRole(gemuRole).catch(console.error);
+    if (gemuRole) {
+      msg.member.removeRole(gemuRole.id).catch(console.error);
       channel.send('Removed gemu role from ' + msg.member);
     } else {
-      msg.member.addRole(gemuRole).catch(console.error);
+      msg.member.addRole(gemuRole.id).catch(console.error);
       channel.send('Applied gemu role to ' + msg.member);
     }
   } catch (e) {
     console.log('error during gemuRoleToggle', e)
+  }
+}
+
+/**
+ *  For use when turning gemquest on during the startup process.
+ */
+exports.initializeGemquest = function (bot) {
+  try {
+    const channelName = state.gemquest.init_channel_name;
+    const gemquestChannel = bot.channels.find('name', channelName);
+    if (gemquestChannel) {
+      console.log('initializing gemquest in channel', channelName);
+      internals.activateGemquest(gemquestChannel, true);
+    } else {
+      console.log('cannot find channel', channelName);
+    }
+  } catch (e) {
+    console.log('failure during initialize::activateGemquest', e);
   }
 }
 
@@ -200,11 +216,12 @@ internals.clearAllScheduledJobs = function() {
 
 internals.gemQuestMessage = function(channel) {
   return function (scheduledTime) {
-    console.log('Gem Quest began at ', scheduledTime);
+    console.log('Gem Quest beginning at ', scheduledTime);
     try {
-      channel.send('<@&' + state.gemquest.mention_id + '> : Gem quest has begun! It will be active for the next 30 minutes.');
+      const gemquestRole = channel.guild.roles.find('name', state.gemquest.mention_name);
+      channel.send('<@&' + gemquestRole.id + '> : Gem quest has begun! It will be active for the next 30 minutes.');
     } catch (e) {
-      console.log('error during gemQuestMessage', e)
+      console.log('error during gemQuestMessage', e);
     }
   };
 }
