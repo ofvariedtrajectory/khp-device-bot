@@ -1,11 +1,10 @@
-
-exports.routes = function(server, mongodb) {
+exports.routes = function (server) {
     server.route({
         method: 'GET',
         path: '/{path*}',
         handler: {
             directory: {
-                path: '.',
+                path: './public',
                 redirectToSlash: true,
                 index: true
             }

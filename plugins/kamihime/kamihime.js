@@ -5,6 +5,7 @@ exports.commands = [
   'gemquestoff',
   'devdebug',
   'gemu',
+  'rollgacha',
 ]
 
 //var AuthDetails = require("../../auth.json");
@@ -31,6 +32,7 @@ exports.commands = [
 // ));
 const lens = require('./lens');
 const gemquestService = require('./kamihime-gemquest.service');
+const playGachaService = require('./lens/gacha/play/play-gacha.service');
 const profileService = lens.profile;
 let mongodb;
 
@@ -207,5 +209,15 @@ exports.gemu = {
   },
   process: function(bot,msg,suffix) {
     gemquestService.gemuRoleToggle(msg);
+  }
+}
+
+exports.rollgacha = {
+  usage: 'rollgacha',
+  description: function() {
+    return 'Outputs a 10 pull';
+  },
+  process: function(bot,msg,suffix) {
+    playGachaService.rollGacha(msg.channel);
   }
 }

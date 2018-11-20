@@ -1,5 +1,6 @@
 const Hapi = require('hapi');
 const Path = require('path');
+const Luba = require('./luba');
 
 // Start the server
 exports.init = async function(config, mongodb) {
@@ -9,12 +10,16 @@ exports.init = async function(config, mongodb) {
         port: config.lensPort,
         routes: {
             files: {
-                relativeTo: Path.join(__dirname, 'public')
+                relativeTo: Path.join(__dirname, 'static')
             }
         }
     });
 
     try {
+        await server.register(require('hapi-auth-basic'));
+        const luba = new Luba(config);
+        server.auth.strategy('luba', 'basic', { validate: luba.validate() });
+
         await server.register(require('inert'));
 
         require('./routes').setup(server, mongodb);
