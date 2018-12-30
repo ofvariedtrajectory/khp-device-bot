@@ -154,10 +154,10 @@ commands = {
 };
 
 if(AuthDetails.hasOwnProperty("client_id")){
-	commands["invite"] = {
-		description: "generates an invite link you can use to invite the bot to your server",
+	commands["state"] = {
+		description: "logs the application state to stdout.",
 		process: function(bot,msg,suffix){
-			msg.channel.send("invite link: https://discordapp.com/oauth2/authorize?&client_id=" + AuthDetails.client_id + "&scope=bot&permissions=470019135");
+			console.log('invite link: https://discordapp.com/oauth2/authorize?&client_id=' + AuthDetails.client_id + '&scope=bot&permissions=470019135');
 		}
 	}
 }
@@ -181,7 +181,7 @@ bot.on("ready", function () {
 	console.log("type "+Config.commandPrefix+"help in Discord for a commands list.");
 	bot.user.setPresence({
 		game: {
-			name: Config.commandPrefix+"help | " + bot.guilds.array().length +" Servers"
+			name: Config.commandPrefix+"help | 準備完了です"
 		}
 	}); 
 });
