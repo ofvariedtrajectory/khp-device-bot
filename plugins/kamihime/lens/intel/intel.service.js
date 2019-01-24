@@ -55,7 +55,10 @@ intelService.teach = async function (msg, topic, entity, contents, profile, db) 
             by_id: profile._id,
             lastUpdated: new Date()
         };
-        const options = { upsert: true };
+        const options = {
+            upsert: true,
+            new: true
+        };
 
         return await collection.findAndModify(
             query,
