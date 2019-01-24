@@ -3,9 +3,10 @@ exports.commands = [
   'nextgem',
   'gemquest',
   'gemquestoff',
-  'devdebug',
   'gemu',
   'rollgacha',
+  'intel',
+  'teach',
 ]
 
 //var AuthDetails = require("../../auth.json");
@@ -33,6 +34,7 @@ exports.commands = [
 const lens = require('./lens');
 const gemquestService = require('./kamihime-gemquest.service');
 const playGachaService = require('./lens/gacha/play/play-gacha.service');
+const intelService = require('./lens/intel/intel.service');
 const profileService = lens.profile;
 let mongodb;
 
@@ -64,22 +66,86 @@ initialize();
 
 
 
-exports.devdebug = {
-  usage: 'devdebug',
+exports.intel = {
+  usage: 'intel <topic> <entity>',
   description: function() {
-    return 'Kamihime Developer Debug';
+    return 'Qualified personnel may request the intel I have been taught';
   },
   process: function(bot,msg,suffix) {
+    const self = this;
     const channel = msg.channel;
-    console.log(msg.author.username);
 
     profileService.getProfileOrCreate(msg.author.id , msg.author.username, mongodb).then(function(profile) {
       console.log(profile);
-      channel.send(msg.author.id);
+      return profile;
+    }).then(function (profile) {
+      const args = (suffix || '').split(' ').filter(function (a) { return a !== ''; });
+      if (args.length !== 2) {
+        channel.send('Correct usage: ' + self.usage);
+        return;
+      }
+
+      const topic = args[0];
+      const entity = args[1];
+
+      return intelService.requestIntel(msg, topic, entity, profile, mongodb).then(function (intel) {
+        if (intel !== null) {
+          console.log('ready to teach intel', intel);
+          channel.send(
+            intel.topic + '\n' + intel.entity + '\n' + intel.contents
+          );
+        } else {
+          channel.send('How may I help you?');
+        }
+      });
     }).catch(function(e) {
       console.log(e);
+      channel.send('Something went wrong, I was not able to understand you.');
     });
+  }
+}
 
+exports.teach = {
+  usage: 'teach <topic> <entity> <contents>',
+  description: function() {
+    return 'A method for qualified personnel to teach me intel';
+  },
+  process: function(bot,msg,suffix) {
+    const self = this;
+    const channel = msg.channel;
+
+    profileService.getProfileOrCreate(msg.author.id , msg.author.username, mongodb).then(function(profile) {
+      console.log(profile);
+      return profile;
+    }).then(function (profile) {
+      const args = (suffix || '').split(' ').filter(function (a) { return a !== ''; });
+      if (args.length !== 3) {
+        channel.send('Correct usage: ' + self.usage);
+        return;
+      }
+
+      const topic = args[0];
+      const entity = args[1];
+      const contents = args[2];
+
+      return intelService.teach(msg, topic, entity, contents, profile, mongodb).then(function (intel) {
+        if (intel !== null) {
+          console.log('learned intel', intel);
+          const learnedVsUpdated = intel.lastErrorObject.updatedExisting
+            ? 'updated my understanding of'
+            : 'learned the concept of';
+          channel.send(
+            'I have effectively ' + learnedVsUpdated + ' '
+            + intel.value.topic + ': ' + intel.value.entity
+          );
+        } else {
+          channel.send('How may I help you?');
+        }
+      });
+    }).catch(function(e) {
+      console.log(e);
+      channel.send('Something went wrong, I was not able to understand you.');
+    });
   }
 }
 
