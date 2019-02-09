@@ -5,6 +5,7 @@ exports.commands = [
   'gemquestoff',
   'gemu',
   'rollgacha',
+  'rollyologacha',
   'intel',
   'teach',
 ]
@@ -285,5 +286,15 @@ exports.rollgacha = {
   },
   process: function(bot,msg,suffix) {
     playGachaService.rollGacha(msg.channel);
+  }
+}
+
+exports.rollyologacha = {
+  usage: 'rollyologacha',
+  description: function() {
+    return 'Outputs a single yolo pull';
+  },
+  process: function(bot,msg,suffix) {
+    playGachaService.rollYoloGacha(msg.channel);
   }
 }

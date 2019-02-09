@@ -22,13 +22,17 @@ contentsMap.r.push(gachaContentsService.createR('Apsara', 'water', 'kamihime wea
 contentsMap.sr.push(gachaContentsService.createSR('Anzu', 'thunder', 'eidolon'));
 contentsMap.ssr.push(gachaContentsService.createSSR('Belial', 'fire', 'eidolon'));
 
-exports.rollGacha = internals.rollGacha = function(channel) {
+exports.rollGacha = internals.rollGacha = function (channel) {
   const tenPull = [];
   for (let i = 0; i < 10; i++) {
     tenPull.push(internals._rollSingleGacha());
   }
   
   internals.displayResults(channel, tenPull)
+}
+
+exports.rollYoloGacha = internals.rollYoloGacha = function (channel) {
+  internals.displayResults(channel, [internals._rollSingleGacha()]);
 }
 
 internals._rollSingleGacha = function () {
